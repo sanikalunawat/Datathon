@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Behavior Forecast</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link rel="stylesheet" href="\static\styles.css">
+    <script src="\static\scripts.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Customer Behavior Forecast</h1>
+            <p>Enter customer data to generate behavior predictions</p>
+        </header>
+
+        <div class="app-grid">
+            <div class="card">
+                <form id="customerForm">
+                    <div class="form-group">
+                        <label for="customerId">Customer ID / Name</label>
+                        <input type="text" id="customerId" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" min="18" max="100" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" name="gender" value="male" required>
+                                Male
+                            </label>
+                            <label>
+                                <input type="radio" name="gender" value="female">
+                                Female
+                            </label>
+                            <label>
+                                <input type="radio" name="gender" value="other">
+                                Other
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="income">Income Level</label>
+                        <select id="income" required>
+                            <option value="">Select Income Level</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="frequency">Visit Frequency</label>
+                        <select id="frequency" required>
+                            <option value="">Select Frequency</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="biweekly">Bi-weekly</option>
+                            <option value="monthly">Monthly</option>
+                            <option value="quarterly">Quarterly</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment">Preferred Payment Method</label>
+                        <select id="payment" required>
+                            <option value="">Select Payment Method</option>
+                            <option value="cash">Cash</option>
+                            <option value="card">Card</option>
+                            <option value="digital">Digital Wallet</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="items">Total Items Purchased</label>
+                        <input type="number" id="items" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastPurchase">Total Cost of Last Purchase</label>
+                        <input type="number" id="lastPurchase" min="0" step="0.01" required>
+                    </div>
+
+                    <button type="submit">Generate Predictions</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div id="predictions">
+                    <div class="chart-container">
+                        <h3>Customer Retention Probability</h3>
+                        <canvas id="gaugeChart"></canvas>
+                        <div id="retentionPrediction" class="prediction-text">Enter data to see prediction</div>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>Store Preferences</h3>
+                        <canvas id="storeChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>Product Categories</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>Spending Trend</h3>
+                        <canvas id="spendingChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+
+    const gaugeChart = new Chart(document.getElementById('gaugeChart'), {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [75, 25],
+                backgroundColor: ['#4a90e2', '#eee']
+            }]
+        },
+        options: {
+            circumference: 180,
+            rotation: -90,
+            cutout: '75%',
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+    
+    const storeChart = new Chart(document.getElementById('storeChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Mall', 'Supermarket', 'Local Shop'],
+            datasets: [{
+                label: 'Preference Score',
+                data: [0, 0, 0],
+                backgroundColor: '#4a90e2'
+            }]
+        }
+    });
+    
+    const categoryChart = new Chart(document.getElementById('categoryChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Electronics', 'Clothing', 'Groceries', 'Home Goods'],
+            datasets: [{
+                data: [0, 0, 0, 0],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0']
+            }]
+        }
+    });
+    
+    const spendingChart = new Chart(document.getElementById('spendingChart'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Spending Trend',
+                data: [0, 0, 0, 0, 0, 0],
+                borderColor: '#4a90e2',
+                tension: 0.4
+            }]
+        }
+    });
+// Form submission handler
+document.getElementById('customerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // Simulate predictions based on form data
+    const formData = new FormData(e.target);
+    const lastPurchase = parseFloat(document.getElementById('lastPurchase').value);
+    const visitFreq = document.getElementById('frequency').value;
+    const income = document.getElementById('income').value;
+
+    // Update retention probability
+    const retentionScore = calculateRetentionScore(lastPurchase, visitFreq, income);
+    gaugeChart.data.datasets[0].data = [retentionScore, 100 - retentionScore];
+    gaugeChart.update();
+    document.getElementById('retentionPrediction').textContent = 
+        `${retentionScore}% likelihood of return visit`;
+
+    // Update store preferences
+    const storePreferences = generateStorePreferences(income, visitFreq);
+    storeChart.data.datasets[0].data = storePreferences;
+    storeChart.update();
+
+    // Update product categories
+    const categories = generateCategories(income, lastPurchase);
+    categoryChart.data.datasets[0].data = categories;
+    categoryChart.update();
+
+    // Update spending trend
+    const spendingTrend = generateSpendingTrend(lastPurchase, income);
+    spendingChart.data.datasets[0].data = spendingTrend;
+    spendingChart.update();
+});
+
+// Helper functions for generating mock predictions
+function calculateRetentionScore(lastPurchase, frequency, income) {
+    let score = 70; // Base score
+    
+    // Adjust based on purchase amount
+    if (lastPurchase > 100) score += 10;
+    if (lastPurchase > 500) score += 5;
+    
+    // Adjust based on frequency
+    if (frequency === 'weekly') score += 10;
+    if (frequency === 'monthly') score -= 5;
+    
+    // Adjust based on income
+    if (income === 'high') score += 5;
+    
+    return Math.min(Math.max(score, 0), 100);
+}
+
+function generateStorePreferences(income, frequency) {
+    let mall = 40, supermarket = 30, local = 30;
+    
+    if (income === 'high') {
+        mall += 20;
+        supermarket -= 10;
+        local -= 10;
+    } else if (income === 'low') {
+        mall -= 20;
+        supermarket += 10;
+        local += 10;
+    }
+    
+    return [mall, supermarket, local];
+}
+
+function generateCategories(income, lastPurchase) {
+    let electronics = 25, clothing = 25, groceries = 25, homeGoods = 25;
+    
+    if (income === 'high') {
+        electronics += 10;
+        clothing += 5;
+        groceries -= 10;
+        homeGoods -= 5;
+    } else if (income === 'low') {
+        electronics -= 10;
+        clothing -= 5;
+        groceries += 10;
+        homeGoods += 5;
+    }
+    
+    return [electronics, clothing, groceries, homeGoods];
+}
+
+function generateSpendingTrend(lastPurchase, income) {
+    const baseSpending = lastPurchase * 0.8;
+    const trend = [];
+    let multiplier = income === 'high' ? 1.1 : (income === 'low' ? 0.9 : 1);
+    
+    for (let i = 0; i < 6; i++) {
+        trend.push(baseSpending * multiplier * (1 + Math.random() * 0.2));
+    }
+    
+    return trend;
+}
+</script>
+
+       
+    
+</body>
+</html>
