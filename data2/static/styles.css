@@ -1,0 +1,144 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Navigation Bar */
+nav {
+    background-color: #007bff;
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+nav h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* Search Section */
+.search-section {
+    margin: 40px 0;
+    text-align: center;
+}
+
+.search-section h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+input[type="text"] {
+    padding: 12px;
+    width: 300px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+button {
+    padding: 12px 24px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.error {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Recommendations Section */
+.recommendations-section {
+    margin: 40px 0;
+}
+
+.recommendations-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.highlight {
+    color: #007bff;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex: 1 1 calc(33.333% - 40px);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Search History Section */
+.history-section {
+    margin: 40px 0;
+}
+
+.history-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.history-section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.history-section li {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+footer {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+footer p {
+    margin: 0;
+}

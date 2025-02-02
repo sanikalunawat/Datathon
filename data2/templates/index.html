@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Recommendation System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="container">
+            <h1>Product Recommendation System</h1>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <section class="search-section">
+            <h2>Find Personalized Recommendations</h2>
+            <form method="POST">
+                <div class="form-group">
+                    <input type="text" id="customer_name" name="customer_name" value="{{ customer_name }}" placeholder="Enter customer name" required>
+                    <button type="submit">Get Recommendations</button>
+                </div>
+            </form>
+
+            {% if error %}
+                <p class="error">{{ error }}</p>
+            {% endif %}
+        </section>
+
+        {% if recommendations %}
+            <section class="recommendations-section">
+                <h2>Top 5 Recommendations for <span class="highlight">{{ customer_name }}</span>:</h2>
+                <div class="cards">
+                    {% for product in recommendations %}
+                        <div class="card">
+                            <p>{{ product }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Datathon Team Rest Assured.</p>
+        </div>
+    </footer>
+</body>
+</html>
