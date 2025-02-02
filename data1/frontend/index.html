@@ -1,0 +1,87 @@
+<!-- frontend/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Spending Prediction</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Customer Spending Prediction</h1>
+        <label for="customer_name">Customer Name:</label>
+        <input type="text" id="customer_name" placeholder="Enter customer name">
+        <button onclick="getPrediction()">Predict</button>
+
+        <div id="chart"></div>
+        <div id="prediction_result"></div>
+    </div>
+
+    <script>
+        async function getPrediction() {
+            const customerName = document.getElementById('customer_name').value;
+            if (!customerName) {
+                alert('Please enter a customer name.');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ customer_name: customerName })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    displayPrediction(data);
+                } else {
+                    alert(`Error: ${data.error}`);
+                }
+            } catch (error) {
+                alert('An error occurred while fetching the prediction.');
+            }
+        }
+
+        function displayPrediction(data) {
+            const resultDiv = document.getElementById('prediction_result');
+            resultDiv.innerHTML = `
+                <h2>Prediction Result</h2>
+                <p>Customer: ${data.customer_name}</p>
+                <p>Predicted Spend: $${data.predicted_spend}</p>
+            `;
+
+            // Plot the chart (example data)
+            const chartData = [
+                {
+                    x: ['2023-01-01', '2023-02-01', '2023-03-01'],  // Replace with actual dates
+                    y: [100, 150, 200],  // Replace with actual historical data
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Previous Purchases'
+                },
+                {
+                    x: ['2023-04-01'],  // Replace with the prediction date
+                    y: [data.predicted_spend],
+                    type: 'scatter',
+                    mode: 'markers',
+                    name: 'Predicted Spend',
+                    marker: { color: 'red' }
+                }
+            ];
+
+            const layout = {
+                title: `Customer's Spending History & Predicted Next Spend: ${data.customer_name}`,
+                xaxis: { title: 'Date' },
+                yaxis: { title: 'Total Cost ($)' }
+            };
+
+            Plotly.newPlot('chart', chartData, layout);
+        }
+    </script>
+</body>
+</html>

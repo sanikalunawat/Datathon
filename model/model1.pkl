@@ -1,4 +1,0 @@
-from forecast import train_and_save_model
-
-# Call this function to train and save the model
-train_and_save_model()
