@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Spend Prediction</title>
+</head>
+<body>
+    <h1>Customer Spend Prediction</h1>
+
+    <label for="customerName">Customer Name:</label>
+    <input type="text" id="customerName" name="customerName">
+
+    <button onclick="predictSpend()">Predict Spend</button>
+
+    <h2 id="result"></h2>
+
+    <script>
+        async function predictSpend() {
+            const customerName = document.getElementById('customerName').value;
+            
+            if (!customerName) {
+                alert("Please enter a customer name.");
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ customer_name: customerName })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    document.getElementById('result').innerHTML = `Error: ${data.error}`;
+                } else {
+                    document.getElementById('result').innerHTML = `Predicted Spend for ${data.customer_name}: $${data.predicted_spend}`;
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>

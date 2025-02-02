@@ -50,9 +50,10 @@ def predict():
         # Prepare customer data
         customer_features = prepare_customer_data(customer_name)
 
-        # Make the prediction
-        predicted_spend = model.predict([customer_features])[0] * 5.3
 
+        # Make the prediction
+        predicted_spend = model.predict([customer_features])[0] *5.3
+        
         # Return the prediction
         return jsonify({
             'customer_name': customer_name,
